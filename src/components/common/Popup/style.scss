@@ -1,0 +1,49 @@
+.g-modal__content-aligner {
+  width: 100%;
+  height: 100%;
+}
+.g-modal__content-wrapper {
+  margin: 0;
+  width: inherit;
+  height: inherit;
+}
+.g-modal__content {
+  height: calc(100% - 120px);
+  padding: 60px 40px;
+}
+.popup-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.back-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.title-container {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 30px;
+  color: inherit;
+  padding: 0 10px;
+  user-select: none;
+}
+.close-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

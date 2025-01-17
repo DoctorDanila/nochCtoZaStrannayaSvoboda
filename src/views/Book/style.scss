@@ -1,0 +1,59 @@
+.g-table {
+    width: 100%;
+}
+
+.g-table .g-table__cell_sticky_end {
+    background: inherit;
+}
+
+.table-options-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.table-options {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 6px;
+    transition: .25s all;
+    cursor: pointer;
+}
+.table-options:hover {
+    background: var(--g-color-base-background);
+}
+
+.creation-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 15px;
+}
+
+.box {
+    width: calc(50% - 20px);
+    padding: 10px 15px;
+    border-radius: 13px;
+    background-color: var(--g-color-base-generic);
+    background: var(--g-color-base-generic);
+}
+
+.fullscr {
+    width: 100% !important;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+}
