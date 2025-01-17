@@ -14,7 +14,7 @@ const BookChangePopup = React.forwardRef((props, ref) => {
   const [bookYearValue, setBookYearValue] = React.useState('');
   let id = props.id || null;
   const handleGetData = useCallback((id) => {
-    fetch(`http://26.47.175.40:5000/api/book/${id}`, {
+    fetch(`http://localhost:5000/api/book/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ const BookChangePopup = React.forwardRef((props, ref) => {
             }
             setErrors(validationErrors);
             if (Object.keys(validationErrors).length === 0) {
-              fetch(`http://26.47.175.40:5000/api/book/${id}`, {
+              fetch(`http://localhost:5000/api/book/${id}`, {
                   method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json'

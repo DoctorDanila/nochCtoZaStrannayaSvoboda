@@ -16,7 +16,7 @@ const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
     const [ludishkaEmailValue, setLudishkaEmailValue] = React.useState('Действителен');
   let id = props.id || null;
   const handleGetData = useCallback((id) => {
-    fetch(`http://26.47.175.40:5000/api/subscription/${id}`, {
+    fetch(`http://localhost:5000/api/subscription/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
             }
             setErrors(validationErrors);
             if (Object.keys(validationErrors).length === 0) {
-                fetch(`http://26.47.175.40:5000/api/subscription/${id}`, {
+                fetch(`http://localhost:5000/api/subscription/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

@@ -23,7 +23,7 @@ export default function Reader() {
     const [ludishkaId, setLudishkaId] = React.useState(null);
     const popupRef = React.useRef(null);
     useEffect(() => {
-        fetch(`http://26.47.175.40:5000/api/reader`, {
+        fetch(`http://localhost:5000/api/reader`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ export default function Reader() {
                 text: 'Удалить',
                 icon: <Icon data={TrashBin} size={14} />,
                 handler: () => {
-                    fetch(`http://26.47.175.40:5000/api/reader/${rowData.ReaderId}`, {
+                    fetch(`http://localhost:5000/api/reader/${rowData.ReaderId}`, {
                         method: 'DELETE'
                     }).then((response) => {
                         console.log("response", response);
@@ -142,7 +142,7 @@ export default function Reader() {
                         }
                         setErrors(validationErrors);
                         if (Object.keys(validationErrors).length === 0) {
-                            fetch(`http://26.47.175.40:5000/api/reader`, {
+                            fetch(`http://localhost:5000/api/reader`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'

@@ -21,7 +21,7 @@ export default function Book() {
     const [bookId, setBookId] = React.useState(null);
     const popupRef = React.useRef(null);
     useEffect(() => {
-        fetch(`http://26.47.175.40:5000/api/book`, {
+        fetch(`http://localhost:5000/api/book`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export default function Book() {
                 text: 'Удалить',
                 icon: <Icon data={TrashBin} size={14} />,
                 handler: () => {
-                    fetch(`http://26.47.175.40:5000/api/book/${rowData.BookId}`, {
+                    fetch(`http://localhost:5000/api/book/${rowData.BookId}`, {
                         method: 'DELETE'
                     }).then((response) => {
                         console.log("response", response);
@@ -131,7 +131,7 @@ export default function Book() {
                         }
                         setErrors(validationErrors);
                         if (Object.keys(validationErrors).length === 0) {
-                            fetch(`http://26.47.175.40:5000/api/book`, {
+                            fetch(`http://localhost:5000/api/book`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'

@@ -35,7 +35,7 @@ export default function Subscription() {
     };
 
     useEffect(() => {
-        fetch(`http://26.47.175.40:5000/api/subscription`, {
+        fetch(`http://localhost:5000/api/subscription`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export default function Subscription() {
                 text: 'Удалить',
                 icon: <Icon data={TrashBin} size={14} />,
                 handler: () => {
-                    fetch(`http://26.47.175.40:5000/api/subscription/${rowData.SubscriptionId}`, {
+                    fetch(`http://localhost:5000/api/subscription/${rowData.SubscriptionId}`, {
                         method: 'DELETE'
                     }).then((response) => {
                         console.log("response", response);
@@ -150,7 +150,7 @@ export default function Subscription() {
                         }
                         setErrors(validationErrors);
                         if (Object.keys(validationErrors).length === 0) {
-                            fetch(`http://26.47.175.40:5000/api/subscription`, {
+                            fetch(`http://localhost:5000/api/subscription`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
