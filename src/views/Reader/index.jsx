@@ -5,6 +5,7 @@ import {Icon} from '@gravity-ui/uikit';
 import LudishkaChangePopup from "../../components/LudishkaChangePopup";
 import './style.scss';
 import { toaster } from "@gravity-ui/uikit/toaster-singleton-react-18";
+import config from '/public/config.js';
 
 const MyTable = withTableActions(Table);
 
@@ -23,7 +24,7 @@ export default function Reader() {
     const [ludishkaId, setLudishkaId] = React.useState(null);
     const popupRef = React.useRef(null);
     useEffect(() => {
-        fetch(`http://localhost:5000/api/reader`, {
+        fetch(`${config.baseURL}/reader`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,8 +33,8 @@ export default function Reader() {
             console.log("response", response);
             return response.json();
         }).then((dt) => {
-            console.log("data", dt);
-            setData(dt)
+            console.log("data", dt.data);
+            setData(dt.data)
         }).catch(err => console.log(err))
     }, [refresh_flag, open]);
     useEffect(() => {
@@ -51,7 +52,7 @@ export default function Reader() {
                 text: 'Исправить',
                 icon: <Icon data={Pencil} size={14} />,
                 handler: () => {
-                    setLudishkaId(rowData.ReaderId);
+                    setLudishkaId(rowData.id);
                     setOpen(true);
                 },
             },
@@ -59,11 +60,11 @@ export default function Reader() {
                 text: 'Удалить',
                 icon: <Icon data={TrashBin} size={14} />,
                 handler: () => {
-                    fetch(`http://localhost:5000/api/reader/${rowData.ReaderId}`, {
+                    fetch(`${config.baseURL}/reader/${rowData.id}`, {
                         method: 'DELETE'
                     }).then((response) => {
                         console.log("response", response);
-                        if (response.status === 200 && response.ok) {
+                        if (response.status === 204 || response.ok) {
                             toaster.add({
                                 name: 'delete',
                                 title: 'Людишка удалена',
@@ -84,7 +85,7 @@ export default function Reader() {
             },
         ];
     };
-    const columns = [{id: 'ReaderId'}, {id: 'Name'}, {id: 'Surname'}, {id: 'Email'}];
+    const columns = [{id: 'id'}, {id: 'name'}, {id: 'surname'}, {id: 'email'}];
     return (
         <>
             <LudishkaChangePopup ref={popupRef} open={open} id={ludishkaId} onClose={() => setOpen(false)} />
@@ -142,19 +143,19 @@ export default function Reader() {
                         }
                         setErrors(validationErrors);
                         if (Object.keys(validationErrors).length === 0) {
-                            fetch(`http://localhost:5000/api/reader`, {
+                            fetch(`${config.baseURL}/reader`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                    Name: ludishkaName,
-                                    Surname: ludishkaSurname,
-                                    Email: ludishkaEmail
+                                    name: ludishkaName,
+                                    surname: ludishkaSurname,
+                                    email: ludishkaEmail
                                 })
                             }).then((response) => {
                                 console.log("response", response);
-                                if (response.status === 200 && response.ok) {
+                                if (response.status === 201 && response.ok) {
                                     toaster.add({
                                         name: 'up',
                                         title: 'Людишка добавлена',

@@ -3,6 +3,7 @@ import Popup from "../common/Popup/index.jsx";
 import {Button, TextInput} from '@gravity-ui/uikit';
 import { toaster } from '@gravity-ui/uikit/toaster-singleton-react-18';
 import "./style.scss";
+import config from '/public/config.js';
 
 const BookChangePopup = React.forwardRef((props, ref) => {
   const bookNameRef = React.useRef(null);
@@ -14,7 +15,7 @@ const BookChangePopup = React.forwardRef((props, ref) => {
   const [bookYearValue, setBookYearValue] = React.useState('');
   let id = props.id || null;
   const handleGetData = useCallback((id) => {
-    fetch(`http://localhost:5000/api/book/${id}`, {
+    fetch(`${config.baseURL}/book/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -24,8 +25,8 @@ const BookChangePopup = React.forwardRef((props, ref) => {
       return response.json();
     }).then((dt) => {
       console.log("data", dt);
-      setBookNameValue(dt.Title);
-      setBookYearValue(dt.Year);
+      setBookNameValue(dt.title);
+      setBookYearValue(dt.year);
       toaster.add({
         name: 'up',
         title: 'Получили информацию о книге',
@@ -67,14 +68,14 @@ const BookChangePopup = React.forwardRef((props, ref) => {
             }
             setErrors(validationErrors);
             if (Object.keys(validationErrors).length === 0) {
-              fetch(`http://localhost:5000/api/book/${id}`, {
+              fetch(`${config.baseURL}/book/${id}`, {
                   method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({
-                    Title: bookName,
-                    Year: bookYear
+                    title: bookName,
+                    year: bookYear
                   })
               }).then((response) => {
                   console.log("response", response);

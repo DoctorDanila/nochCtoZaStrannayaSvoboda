@@ -5,6 +5,7 @@ import {Icon} from '@gravity-ui/uikit';
 import BookChangePopup from "../../components/BookChangePopup";
 import './style.scss';
 import { toaster } from '@gravity-ui/uikit/toaster-singleton-react-18';
+import config from '/public/config.js';
 
 const MyTable = withTableActions(Table);
 
@@ -21,7 +22,8 @@ export default function Book() {
     const [bookId, setBookId] = React.useState(null);
     const popupRef = React.useRef(null);
     useEffect(() => {
-        fetch(`http://localhost:5000/api/book`, {
+        console.log('refresh_flag', refresh_flag);
+        fetch(`${config.baseURL}/book`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -30,8 +32,8 @@ export default function Book() {
             console.log("response", response);
             return response.json();
         }).then((dt) => {
-            console.log("data", dt);
-            setData(dt)
+            console.log("data", dt.data);
+            setData(dt.data)
         }).catch(err => console.log(err))
     }, [refresh_flag, open]);
     useEffect(() => {
@@ -49,7 +51,7 @@ export default function Book() {
                 text: 'Исправить',
                 icon: <Icon data={Pencil} size={14} />,
                 handler: () => {
-                    setBookId(rowData.BookId);
+                    setBookId(rowData.id);
                     setOpen(true);
                 },
             },
@@ -57,11 +59,11 @@ export default function Book() {
                 text: 'Удалить',
                 icon: <Icon data={TrashBin} size={14} />,
                 handler: () => {
-                    fetch(`http://localhost:5000/api/book/${rowData.BookId}`, {
+                    fetch(`${config.baseURL}/book/${rowData.id}`, {
                         method: 'DELETE'
                     }).then((response) => {
                         console.log("response", response);
-                        if (response.status === 200 && response.ok) {
+                        if (response.status === 204 || response.ok) {
                             toaster.add({
                                 name: 'delete',
                                 title: 'Книга удалена',
@@ -82,7 +84,7 @@ export default function Book() {
             },
         ];
     };
-    const columns = [{id: 'BookId'}, {id: 'Title'}, {id: 'Year'}];
+    const columns = [{id: 'id'}, {id: 'title'}, {id: 'year'}];
     return (
         <>
             <BookChangePopup ref={popupRef} open={open} id={bookId} onClose={() => setOpen(false)} />
@@ -131,18 +133,18 @@ export default function Book() {
                         }
                         setErrors(validationErrors);
                         if (Object.keys(validationErrors).length === 0) {
-                            fetch(`http://localhost:5000/api/book`, {
+                            fetch(`${config.baseURL}/book`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
                                 body: JSON.stringify({
-                                    Title: bookName,
-                                    Year: bookYear
+                                    title: bookName,
+                                    year: bookYear
                                 })
                             }).then((response) => {
                                 console.log("response", response);
-                                if (response.status === 200 && response.ok) {
+                                if ((response.status === 201 || response.status === 200) && response.ok) {
                                     toaster.add({
                                         name: 'cr',
                                         title: 'Книга добавлена',

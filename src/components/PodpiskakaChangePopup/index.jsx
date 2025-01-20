@@ -5,6 +5,7 @@ import { toaster } from '@gravity-ui/uikit/toaster-singleton-react-18';
 import "./style.scss";
 import {RangeCalendar} from '@gravity-ui/date-components';
 import {dateTimeParse, dateTime} from '@gravity-ui/date-utils';
+import config from '/public/config.js';
 
 const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
   const ludishkaEmailRef = React.useRef(null);
@@ -13,10 +14,16 @@ const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
     const [ludishkaEmailStatus, setLudishkaEmailStatus] = React.useState({});
     const [newDateStart, setNewDateStart] = React.useState(0);
     const [newDateEnd, setNewDateEnd] = React.useState(0);
-    const [ludishkaEmailValue, setLudishkaEmailValue] = React.useState('Действителен');
+    const [ludishkaEmailValue, setLudishkaEmailValue] = React.useState(1);
+    const [newOptionsUser, setNewOptionsUser] = React.useState([]);
+    const [newOptionsBook, setNewOptionsBook] = React.useState([]);
+    const [ludishkaReaderValue, setLudishkaReaderValue] = React.useState([]);
+    const [ludishkaBookValue, setLudishkaBookValue] = React.useState([]);
+    const [ludishkaReaderStatus, setLudishkaReaderStatus] = React.useState([]);
+    const [ludishkaBookStatus, setLudishkaBookStatus] = React.useState([]);
   let id = props.id || null;
   const handleGetData = useCallback((id) => {
-    fetch(`http://localhost:5000/api/subscription/${id}`, {
+    fetch(`${config.baseURL}/subscription/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -37,6 +44,48 @@ const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
     }).catch(err => {
       console.log(err);
     })
+    fetch(`${config.baseURL}/book?fields=id,title`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        console.log("response", response);
+        return response.json();
+    }).then((dt) => {
+        console.log("data", dt.data);
+        const filtered = dt.data.filter((item) => item.id !== null);
+
+        // Форматируем дату
+        const formattedData = filtered.map(item => ({
+            ...item,
+            value: item.id,
+            content: item.title,
+        }));
+
+        setNewOptionsBook(formattedData);
+    }).catch(err => console.log(err))
+    fetch(`${config.baseURL}/reader?fields=id,email`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => {
+        console.log("response", response);
+        return response.json();
+    }).then((dt) => {
+        console.log("data", dt.data);
+        const filtered = dt.data.filter((item) => item.id !== null);
+
+        // Форматируем дату
+        const formattedData = filtered.map(item => ({
+            ...item,
+            value: item.id,
+            content: item.email,
+        }));
+
+        setNewOptionsUser(formattedData);
+    }).catch(err => console.log(err))
   }, []);
 
   useEffect(() => {
@@ -51,9 +100,13 @@ const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
         </div>
         <Select onUpdate={(e) => setLudishkaEmailValue(e[0])} ref={ludishkaEmailRef} validationState={ludishkaEmailStatus} errorMessage={errors.ludishkaEmail} view="normal" size='l' placeholder="Статус"
         options={[
-          {value: 'Завершён', content: 'Завершён'},
-          {value: 'Действителен', content: 'Действителен'},
+          {value: 0, content: 'Завершён'},
+          {value: 1, content: 'Действителен'},
         ]} />
+        <Select onUpdate={(e) => setLudishkaReaderValue(e[0])} validationState={ludishkaReaderStatus} errorMessage={errors.ludishkaReader} view="normal" size='l' placeholder="Читатель"
+        options={newOptionsUser} />
+        <Select onUpdate={(e) => setLudishkaBookValue(e[0])} validationState={ludishkaBookStatus} errorMessage={errors.ludishkaBook} view="normal" size='l' placeholder="Книжонка"
+        options={newOptionsBook} />
         <Button view="outlined-info" size="l" onClick={() => {
             console.log(newDateStart, " - ", newDateEnd, " ", ludishkaEmailValue);
             const validationErrors = {};
@@ -66,16 +119,17 @@ const PodpiskakaChangePopup = React.forwardRef((props, ref) => {
             }
             setErrors(validationErrors);
             if (Object.keys(validationErrors).length === 0) {
-                fetch(`http://localhost:5000/api/subscription/${id}`, {
+                fetch(`${config.baseURL}/subscription/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                      SubscriptionId: id,
-                      IssueDate: new Date(newDateStart).toISOString(),
-                      ReturnDate: new Date(newDateEnd).toISOString(),
-                      Status: ludishkaEmailValue
+                      issueDate: new Date(newDateStart),
+                      returnDate: new Date(newDateEnd),
+                      status: ludishkaEmailValue.toString(),
+                      reader: ludishkaReaderValue ? ludishkaReaderValue : null,
+                      book: ludishkaBookValue ? ludishkaBookValue : null
                     })
                 }).then((response) => {
                     console.log("response", response);

@@ -3,6 +3,7 @@ import Popup from "../common/Popup/index.jsx";
 import {Button, TextInput} from '@gravity-ui/uikit';
 import { toaster } from '@gravity-ui/uikit/toaster-singleton-react-18';
 import "./style.scss";
+import config from '/public/config.js';
 
 const LudishkaChangePopup = React.forwardRef((props, ref) => {
   const ludishkaNameRef = React.useRef(null);
@@ -17,7 +18,7 @@ const LudishkaChangePopup = React.forwardRef((props, ref) => {
   const [ludishkaEmailValue, setLudishkaEmailValue] = React.useState('');
   let id = props.id || null;
   const handleGetData = useCallback((id) => {
-    fetch(`http://localhost:5000/api/reader/${id}`, {
+    fetch(`${config.baseURL}/reader/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -27,9 +28,9 @@ const LudishkaChangePopup = React.forwardRef((props, ref) => {
       return response.json();
     }).then((dt) => {
       console.log("data", dt);
-      setLudishkaNameValue(dt.Name);
-      setLudishkaSurnameValue(dt.Surname);
-      setLudishkaEmailValue(dt.Email);
+      setLudishkaNameValue(dt.name);
+      setLudishkaSurnameValue(dt.surname);
+      setLudishkaEmailValue(dt.email);
       toaster.add({
         name: 'up',
         title: 'Получили информацию о людишке',
@@ -80,15 +81,15 @@ const LudishkaChangePopup = React.forwardRef((props, ref) => {
             }
             setErrors(validationErrors);
             if (Object.keys(validationErrors).length === 0) {
-              fetch(`http://localhost:5000/api/reader/${id}`, {
+              fetch(`${config.baseURL}/reader/${id}`, {
                   method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({
-                    Name: ludishkaName,
-                    Surname: ludishkaSurname,
-                    Email: ludishkaEmail
+                    name: ludishkaName,
+                    surname: ludishkaSurname,
+                    email: ludishkaEmail
                   })
               }).then((response) => {
                   console.log("response", response);
